@@ -1,0 +1,69 @@
+
+:root {
+  --primary-color: #0b5cff;
+  --background-color-light: #ffffff;
+  --background-color-dark: #1d1d1d;
+  --text-color-light: #000000;
+  --text-color-dark: #ffffff;
+}
+
+/* styles.css or your CSS file */
+body {
+  transition: background-color 1s ease, color 1s ease; /* Smooth transition for background and text colors */
+}
+
+.theme-light {
+  background-color: white; /* Light theme background */
+  color: black; /* Light theme text color */
+}
+
+.theme-dark {
+  background-color: black; /* Dark theme background */
+  color: white; /* Dark theme text color */
+}
+
+/* Dark theme styles */
+.dark-theme {
+  background-color: var(--background-color-dark);
+  color: var(--text-color-dark);
+}
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
