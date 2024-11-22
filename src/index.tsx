@@ -1,20 +1,19 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import App from './App';
-import { store } from './app/store';
-import { Browser } from '@elastic/eui/src/services/browser';
-import { BrowserRouter } from 'react-router-dom';
-
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+// import "@elastic/eui/dist/eui_theme_light.css";
+// import "@elastic/eui/dist/eui_theme_dark.css";
+import { Provider } from "react-redux";
+import { store } from "./app/store";
+import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-    <BrowserRouter>
-    </BrowserRouter>
-    <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );
-

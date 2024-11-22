@@ -16,6 +16,8 @@ const initialState: authInitialState = {
   isDarkTheme: false,
 };
 
+
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,

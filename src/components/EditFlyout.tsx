@@ -119,7 +119,7 @@ export default function EditFlyout({
             />
           )}
           <MeetingDateField selected={startDate} setStartDate={setStartDate} />
-          <EuiFormRow display="columnCompressedSwitch" label="Cancel Meeting">
+          <EuiFormRow display="columnCompressed" label="Cancel Meeting">
             <EuiSwitch
               showLabel={false}
               label="Cancel Meeting"

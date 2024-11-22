@@ -1,74 +1,74 @@
-import { EuiFlexGroup, EuiForm, EuiSpacer } from '@elastic/eui'
-import React, { useState } from 'react'
-import Header from '../components/Header';
+import { EuiFlexGroup, EuiForm, EuiSpacer } from "@elastic/eui";
+import { addDoc } from "firebase/firestore"
+import moment from "moment";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../app/hooks";
+import CreateMeetingButtons from "../components/FormComponents/CreateMeetingButtons";
+import MeetingDateField from "../components/FormComponents/MeetingDateField";
 import MeetingNameField from "../components/FormComponents/MeetingNameField";
-import MeetingUsersField from '../components/FormComponents/MeetingUsersField';
-import useAuth from '../hooks/useAuth';
-import useFetchUsers from '../hooks/useFetchUsers';
-import moment from 'moment';
-import MeetingDateField from '../components/FormComponents/MeetingDateField';
-import CreateMeetingButtons from '../components/FormComponents/CreateMeetingButtons';
-import { FieldErrorType, UserType } from '../utils/Types';
-import { addDoc } from 'firebase/firestore';
-import { meetingsRef } from '../utils/FirebaseConfig';
-import { generateMeetingID } from '../utils/generateMeetingId';
-import { useAppSelector } from '../app/hooks';
-import { useNavigate } from 'react-router-dom';
-import useToast from '../hooks/useToast';
+import MeetingUserField from "../components/FormComponents/MeetingUsersField";
 
+import Header from "../components/Header";
+import useAuth from "../hooks/useAuth";
+import useFetchUsers from "../hooks/useFetchUsers";
+import useToast from "../hooks/useToast";
+import { meetingsRef } from "../utils/FirebaseConfig";
+import { generateMeetingID } from "../utils/generateMeetingId";
+import { FieldErrorType, UserType } from "../utils/Types";
 
+export default function OneOnOneMeeting() {
+  useAuth();
+  const [users] = useFetchUsers();
+  const [createToast] = useToast();
+  const uid = useAppSelector((zoomApp) => zoomApp.auth.userInfo?.uid);
+  const navigate = useNavigate();
 
-
-function OneOnOneMeeting() {
-    useAuth();
-   const [users] = useFetchUsers();
-   const [createToast] = useToast()
-   const navigate = useNavigate();
-   const uid = useAppSelector((zoom) => zoom.auth.userInfo?.uid);
-   const[meetingName, setMeetingName] = useState("");
-   const [selectedUsers, setSelectedUsers ] = useState<Array<UserType>> ([]);
-   const [startDate, setStartDate] = useState(moment());
-   const [showErrors, setShowErrors] = useState<{
-    meetingName:FieldErrorType;
-    meetingUser:FieldErrorType;
-   }>({
-    meetingName:{
-        show:false,
-        message: [],
+  const [meetingName, setMeetingName] = useState("");
+  const [selectedUser, setSelectedUser] = useState<Array<UserType>>([]);
+  const [startDate, setStartDate] = useState(moment());
+  const [showErrors, setShowErrors] = useState<{
+    meetingName: FieldErrorType;
+    meetingUser: FieldErrorType;
+  }>({
+    meetingName: {
+      show: false,
+      message: [],
     },
     meetingUser: {
-        show:false,
-        message: [],
+      show: false,
+      message: [],
     },
-   });
- 
-   const onUserChange = (selectedOptions:any) => {
-    setSelectedUsers(selectedOptions)
-   };
+  });
 
-   const validateForm = () => {
+  const onUserChange = (selectedOptions: Array<UserType>) => {
+    setSelectedUser(selectedOptions);
+  };
+
+  const validateForm = () => {
+    const showErrorsClone = { ...showErrors };
     let errors = false;
-    const clonedShowErrors = {...showErrors}
-    if(!meetingName.length) {
-        clonedShowErrors.meetingName.show=true;
-        clonedShowErrors.meetingName.message=["Please Enter Meeting Name"];
-        errors = true;
+    if (!meetingName.length) {
+      showErrorsClone.meetingName.show = true;
+      showErrorsClone.meetingName.message = ["Please Enter Meeting Name"];
+      errors = true;
     } else {
-        clonedShowErrors.meetingName.show=false;
-        clonedShowErrors.meetingName.message=[];
+      showErrorsClone.meetingName.show = false;
+      showErrorsClone.meetingName.message = [];
     }
-    if(!selectedUsers.length) {
-        clonedShowErrors.meetingUser.show=true;
-        clonedShowErrors.meetingUser.message = ["Please Select a user"];
+    if (!selectedUser.length) {
+      showErrorsClone.meetingUser.show = true;
+      showErrorsClone.meetingUser.message = ["Please Select a User"];
+      errors = true;
     } else {
-        clonedShowErrors.meetingUser.show=false;
-        clonedShowErrors.meetingUser.message = [];
+      showErrorsClone.meetingUser.show = false;
+      showErrorsClone.meetingUser.message = [];
     }
-    setShowErrors(clonedShowErrors);
+    setShowErrors(showErrorsClone);
     return errors;
-   } 
+  };
 
-   const createMeeting = async () => {
+  const createMeeting = async () => {
     if (!validateForm()) {
       const meetingId = generateMeetingID();
       await addDoc(meetingsRef, {
@@ -76,58 +76,54 @@ function OneOnOneMeeting() {
         meetingId,
         meetingName,
         meetingType: "1-on-1",
-        invitedUsers: [selectedUsers[0].uid],
+        invitedUsers: [selectedUser[0].uid],
         meetingDate: startDate.format("L"),
         maxUsers: 1,
         status: true,
       });
       createToast({
-        title: "One on One Meeting Created Successfully!",
+        title: "One on One Meeting Created Successfully",
         type: "success",
       });
+      navigate("/");
     }
-    navigate("/");
-   };
+  };
 
   return (
-    <div style={{
+    <div
+      style={{
         display: "flex",
         height: "100vh",
         flexDirection: "column",
-      }}>
-        <Header />
-        <EuiFlexGroup justifyContent='center' alignItems='center'>
+      }}
+    >
+      <Header />
+      <EuiFlexGroup justifyContent="center" alignItems="center">
         <EuiForm>
-            <MeetingNameField
-            label="Meeting Name"
-            placeholder="Meeting Name"
-            value={meetingName}
-            setMeetingName={setMeetingName}
+          <MeetingNameField
+            label="Meeting name"
             isInvalid={showErrors.meetingName.show}
             error={showErrors.meetingName.message}
-            />
-        <MeetingUsersField 
-        label="invite User" 
-        options={users} 
-        onChange={onUserChange} 
-        selectedOptions={selectedUsers} 
-        isClearable={false} 
-        placeholder="Select a user" 
-        singleSelection={{asPlainText: true}} 
-        isInvalid={showErrors.meetingUser.show}
-        error={showErrors.meetingUser.message}
-        />
-
-        <MeetingDateField
-        selected={startDate} 
-        setStartDate={setStartDate} />
-
-        <EuiSpacer />
-        <CreateMeetingButtons createMeeting={createMeeting} />
+            placeholder="Meeting name"
+            value={meetingName}
+            setMeetingName={setMeetingName}
+          />
+          <MeetingUserField
+            label="Invite User"
+            isInvalid={showErrors.meetingUser.show}
+            error={showErrors.meetingUser.message}
+            options={users}
+            onChange={onUserChange}
+            selectedOptions={selectedUser}
+            singleSelection={{ asPlainText: true }}
+            isClearable={false}
+            placeholder="Select a User"
+          />
+          <MeetingDateField selected={startDate} setStartDate={setStartDate} />
+          <EuiSpacer />
+          <CreateMeetingButtons createMeeting={createMeeting} />
         </EuiForm>
-        </EuiFlexGroup>
+      </EuiFlexGroup>
     </div>
-    );
- }
-
-export default OneOnOneMeeting;
+  );
+}

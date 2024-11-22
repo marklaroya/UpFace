@@ -6,7 +6,7 @@ import {
 import { EuiThemeColorMode } from "@elastic/eui/src/services/theme";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { useAppSelector } from "./app/hooks";
 import { setToasts } from "./app/slices/MeetingSlice";
 import ThemeSelector from "./components/ThemeSelector";
@@ -43,8 +43,11 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    setTheme(isDarkTheme ? "dark" : "light");
-    localStorage.setItem("zoom-theme", isDarkTheme ? "dark" : "light");
+    if (isInitialEffect) setIsInitialEffect(false);
+    else {
+      window.location.reload();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDarkTheme]);
 
   const overrides = {
@@ -54,14 +57,9 @@ export default function App() {
     },
   };
 
-  useEffect(() => {
-    document.body.className = theme === "dark" ? "theme-dark" : "theme-light";
-  }, [theme]);
-
   return (
     <ThemeSelector>
       <EuiProvider colorMode={theme}>
-        <BrowserRouter>
         <EuiThemeProvider modify={overrides}>
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -80,7 +78,6 @@ export default function App() {
             toastLifeTimeMs={4000}
           />
         </EuiThemeProvider>
-        </BrowserRouter>
       </EuiProvider>
     </ThemeSelector>
   );
