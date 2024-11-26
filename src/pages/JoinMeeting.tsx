@@ -22,6 +22,7 @@ export default function JoinMeeting() {
     }
     setUserLoaded(true);
   });
+  
   useEffect(() => {
     const getMeetingData = async () => {
       if (params.id && userLoaded) {
@@ -83,7 +84,9 @@ export default function JoinMeeting() {
       }
     };
     getMeetingData();
-  }, [userLoaded]);
+  }, [userLoaded, createToast, navigate, params.id, user]);
+
+  
   const appID = 1356394576;
   const serverSecret = "6a66d053611db22eccb4cdaf1c9c9e89";
 
