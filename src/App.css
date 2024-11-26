@@ -1,3 +1,32 @@
+
+:root {
+  --primary-color: #0b5cff;
+  --background-color-light: #ffffff;
+  --background-color-dark: #1d1d1d;
+  --text-color-light: #000000;
+  --text-color-dark: #ffffff;
+}
+
+body {
+  transition: background-color 1s ease, color 1s ease; /* Smooth transition for background and text colors */
+}
+
+.theme-light {
+  background-color: var(--background-color-light);
+  color: var(--text-color-light);
+}
+
+.theme-dark {
+  background-color: var(--background-color-dark);
+  color: var(--text-color-dark);
+}
+
+/* Dark theme styles */
+.dark-theme {
+  background-color: var(--background-color-dark);
+  color: var(--text-color-dark);
+}
+
 .App {
   text-align: center;
 }
@@ -23,6 +52,7 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
 
 .App-link {
   color: #61dafb;
