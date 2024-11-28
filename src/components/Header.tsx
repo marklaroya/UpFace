@@ -137,7 +137,7 @@ export default function Header() {
         <Link to="/">
           <EuiText>
             <h2 style={{ padding: "0 1vw" }}>
-              <EuiTextColor color="#0b5cff">Zoom</EuiTextColor>
+              <EuiTextColor color="#0b5cff">UpFace</EuiTextColor>
             </h2>
           </EuiText>
         </Link>,
